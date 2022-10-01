@@ -8,5 +8,6 @@ CREATE TABLE rsvp (
   response      RESPONSE NOT NULL,
   meal_choice   MEAL_CHOICE NOT NULL,
   create_time   TIMESTAMPTZ NOT NULL DEFAULT now(),
-  update_time   TIMESTAMPTZ NOT NULL DEFAULT now() CHECK (update_time >= create_time)
+  update_time   TIMESTAMPTZ NOT NULL DEFAULT now() CHECK (update_time >= create_time),
+  UNIQUE(name)
 );
