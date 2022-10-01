@@ -6,6 +6,7 @@ module.exports = router;
 // GET /api/rsvp
 router.get('/rsvp', async (req, res, next) => {
   try {
+    console.log('GOT TO RSVP ENDPOINT');
     db.query('SELECT * from rsvp', (err, res) => {
       console.log('result of db query: ', err, res);
     });
