@@ -20,14 +20,16 @@ router.get('/', async (req, res, next) => {
 // POST /api/rsvp
 router.post('/', async (req, res, next) => {
   try {
-    const {name, response, plus_one, meal_choice} = req.body;
+    const {name, email, response, plus_one} = req.body;
+    // TODO: add ON CONFLICT (name) for updating RSVPs
+    // TODO: add meal_choice to form
     const query = {
       text: `
-      INSERT INTO rsvp (name, response, plus_one, meal_choice)
+      INSERT INTO rsvp (name, email, response, plus_one)
       VALUES ($1, $2, $3, $4)
       RETURNING *
       `,
-      values: [name, response, plus_one, meal_choice],
+      values: [name, email, response, plus_one],
     };
     db.query(query, (err, result) => {
       if (err?.constraint === 'rsvp_name_key') {
@@ -36,7 +38,22 @@ router.post('/', async (req, res, next) => {
         res.status(500).send(err.detail);
       }
       if (result?.rows?.length) {
-        res.send(result.rows[0]);
+        const newRSVP = result.rows[0];
+        // If our RSVP insert succeeded, update rsvp_sent in the guest table
+        const guestQuery = {
+          text: `
+              UPDATE guest
+              SET rsvp_sent = TRUE 
+              WHERE email = $1
+              `,
+          values: [newRSVP.email],
+        };
+        db.query(guestQuery, (err, result) => {
+          if (err) {
+            res.status(500).send(err.detail);
+          }
+          res.send(newRSVP);
+        });
       }
     });
   } catch (err) {
