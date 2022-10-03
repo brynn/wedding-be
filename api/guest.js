@@ -17,17 +17,22 @@ router.get('/', async (req, res, next) => {
       values: [email],
     };
     await db.connect();
-    db.query(query, (err, result) => {
-      console.error(err);
-      if (!result?.rows?.length) {
-        res.status(403).send();
-      } else if (err) {
-        res.status(500).send(err.detail);
-      } else if (result) {
-        res.send(result.rows[0]);
-      }
-      db.end();
-    });
+    const {rows} = await db.query(query);
+    if (rows?.length) {
+      res.send(rows[0]);
+    }
+    db.end();
+
+    // db.query(query, (err, result) => {
+    //   if (!result?.rows?.length) {
+    //     res.status(403).send();
+    //   } else if (err) {
+    //     res.status(500).send(err.detail);
+    //   } else if (result) {
+    //     res.send(result.rows[0]);
+    //   }
+    //   db.end();
+    // });
   } catch (err) {
     console.error(err);
     next(err);
