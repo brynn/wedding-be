@@ -10,10 +10,7 @@ router.get('/', async (req, res, next) => {
   }
   try {
     const query = {
-      text: `
-        SELECT * FROM guest
-        WHERE email = $1
-        `,
+      text: `SELECT * FROM guest WHERE email = $1`,
       values: [email],
     };
     await db.connect();
@@ -36,5 +33,5 @@ router.get('/', async (req, res, next) => {
     console.error(err);
     next(err);
   }
-  db.end();
+  await db.end();
 });
