@@ -5,7 +5,7 @@ module.exports = router;
 // GET /api/rsvp
 router.get('/', async (req, res, next) => {
   try {
-    const rsvps = await db.any(`SELECT * FROM guest WHERE email = $1`, [email]);
+    const rsvps = await db.any('SELECT * from rsvp');
     if (rsvps) {
       res.send(rsvps);
     }
