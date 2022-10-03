@@ -15,8 +15,10 @@ router.get('/', async (req, res, next) => {
     };
     db.query(query, (err, result) => {
       if (!result?.rows?.length) {
+        console.error(err);
         res.status(403).send();
       } else if (err) {
+        console.error(err);
         res.status(500).send(err.detail);
       }
       res.send(result.rows[0]);

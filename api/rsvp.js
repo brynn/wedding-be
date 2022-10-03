@@ -7,6 +7,7 @@ router.get('/', async (req, res, next) => {
   try {
     db.query('SELECT * from rsvp', (err, result) => {
       if (err) {
+        console.error(err);
         res.status(500).send(err.detail);
       }
       res.send(result?.rows);
@@ -35,6 +36,7 @@ router.post('/', async (req, res, next) => {
       if (err?.constraint === 'rsvp_name_key') {
         res.status(409).send(`You already RSVP'd, thanks!`);
       } else if (err) {
+        console.error(err);
         res.status(500).send(err.detail);
       }
       if (result?.rows?.length) {
@@ -50,6 +52,7 @@ router.post('/', async (req, res, next) => {
         };
         db.query(guestQuery, (err, result) => {
           if (err) {
+            console.error(err);
             res.status(500).send(err.detail);
           }
           res.send(newRSVP);
