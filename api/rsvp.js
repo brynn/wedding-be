@@ -5,12 +5,14 @@ module.exports = router;
 // GET /api/rsvp
 router.get('/', async (req, res, next) => {
   try {
-    db.query('SELECT * from rsvp', (err, result) => {
+    await db.connect();
+    db.query('SELECT * from rsvp', async (err, result) => {
       if (err) {
         console.error(err);
         res.status(500).send(err.detail);
       }
       res.send(result?.rows);
+      await db.end();
     });
   } catch (err) {
     console.error(err);
@@ -32,13 +34,15 @@ router.post('/', async (req, res, next) => {
       `,
       values: [name, email, response, plus_one],
     };
-    db.query(query, (err, result) => {
+    await db.connect();
+    db.query(query, async (err, result) => {
       if (err?.constraint === 'rsvp_name_key') {
         res.status(409).send(`You already RSVP'd, thanks!`);
       } else if (err) {
         console.error(err);
         res.status(500).send(err.detail);
       }
+      await db.end();
       if (result?.rows?.length) {
         const newRSVP = result.rows[0];
         // If our RSVP insert succeeded, update rsvp_sent in the guest table
@@ -50,12 +54,14 @@ router.post('/', async (req, res, next) => {
               `,
           values: [newRSVP.email],
         };
-        db.query(guestQuery, (err, result) => {
+        await db.connect();
+        db.query(guestQuery, async (err, result) => {
           if (err) {
             console.error(err);
             res.status(500).send(err.detail);
           }
           res.send(newRSVP);
+          await db.end();
         });
       }
     });

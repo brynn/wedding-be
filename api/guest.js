@@ -16,6 +16,7 @@ router.get('/', async (req, res, next) => {
         `,
       values: [email],
     };
+    await db.connect();
     db.query(query, (err, result) => {
       console.error(err);
       if (!result?.rows?.length) {
@@ -25,6 +26,7 @@ router.get('/', async (req, res, next) => {
       } else if (result) {
         res.send(result.rows[0]);
       }
+      db.end();
     });
   } catch (err) {
     console.error(err);

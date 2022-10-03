@@ -19,9 +19,4 @@ const db =
         port: 5432,
       });
 
-const connectDB = async () => {
-  await db.connect();
-};
-connectDB();
-
 module.exports = db;
