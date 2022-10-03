@@ -14,14 +14,14 @@ router.get('/', async (req, res, next) => {
       values: [email],
     };
     db.query(query, (err, result) => {
+      console.error(err);
       if (!result?.rows?.length) {
-        console.error(err);
         res.status(403).send();
       } else if (err) {
-        console.error(err);
         res.status(500).send(err.detail);
+      } else if (result) {
+        res.send(result.rows[0]);
       }
-      res.send(result.rows[0]);
     });
   } catch (err) {
     console.error(err);
