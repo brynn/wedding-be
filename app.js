@@ -9,7 +9,7 @@ module.exports = app;
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-app.use('/', router);
+app.use('/', cors(), router);
 app.use('/api', cors(), require('./api'));
 
 app.listen(port, () =>
