@@ -21,7 +21,6 @@ router.get('/', async (req, res, next) => {
     if (rows?.length) {
       res.send(rows[0]);
     }
-    db.end();
 
     // db.query(query, (err, result) => {
     //   if (!result?.rows?.length) {
@@ -37,4 +36,5 @@ router.get('/', async (req, res, next) => {
     console.error(err);
     next(err);
   }
+  // db.end();
 });
