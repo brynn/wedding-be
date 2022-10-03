@@ -13,12 +13,10 @@ router.get('/', async (req, res, next) => {
       text: `SELECT * FROM guest WHERE email = $1`,
       values: [email],
     };
-    await db.connect();
-    const {rows} = await db.query(query);
+    const {rows} = await db.any(`SELECT * FROM guest WHERE email = $1`, [email]);
     if (rows?.length) {
       res.send(rows[0]);
     }
-    await db.end();
 
     // db.query(query, (err, result) => {
     //   if (!result?.rows?.length) {
@@ -32,7 +30,6 @@ router.get('/', async (req, res, next) => {
     // });
   } catch (err) {
     console.error(err);
-    await db.end();
     next(err);
   }
 });
