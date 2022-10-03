@@ -9,13 +9,9 @@ router.get('/', async (req, res, next) => {
     res.status(403).send('Email is required');
   }
   try {
-    const query = {
-      text: `SELECT * FROM guest WHERE email = $1`,
-      values: [email],
-    };
-    const {rows} = await db.any(`SELECT * FROM guest WHERE email = $1`, [email]);
-    if (rows?.length) {
-      res.send(rows[0]);
+    const guest = await db.one(`SELECT * FROM guest WHERE email = $1`, [email]);
+    if (guest) {
+      res.send(guest);
     }
 
     // db.query(query, (err, result) => {
