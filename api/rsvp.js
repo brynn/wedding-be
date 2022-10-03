@@ -5,6 +5,7 @@ module.exports = router;
 // GET /api/rsvp
 router.get('/', async (req, res, next) => {
   try {
+    await db.connect();
     db.query('SELECT * from rsvp', (err, result) => {
       if (err) {
         console.error(err);
@@ -24,6 +25,7 @@ router.post('/', async (req, res, next) => {
     const {name, email, response, plus_one} = req.body;
     // TODO: add ON CONFLICT (name) for updating RSVPs
     // TODO: add meal_choice to form
+    await db.connect();
     const query = {
       text: `
       INSERT INTO rsvp (name, email, response, plus_one)
