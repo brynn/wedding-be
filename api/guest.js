@@ -5,6 +5,9 @@ module.exports = router;
 // GET /api/guest
 router.get('/', async (req, res, next) => {
   const email = req.query.email;
+  if (!email) {
+    res.status(403).send('Email is required');
+  }
   try {
     const query = {
       text: `
