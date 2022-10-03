@@ -5,18 +5,17 @@ const dbURL =
 
 const db =
   process.env.NODE_ENV === 'production'
-    ? new Client({
-        user: 'brynn',
-        host: 'dpg-ccj1u7irrk09pi2jdfig-a',
-        database: 'wedding',
-        password: 'PC1ytD9OHhFTqC9VBLVi2EmYSdj8ief8',
-        port: 5432,
-      })
+    ? new Client({dbURL})
     : new Client({
         user: 'brynn',
         host: 'localhost',
         database: 'postgres',
         port: 5432,
       });
+
+const connectDB = async () => {
+  await db.connect();
+};
+connectDB();
 
 module.exports = db;
