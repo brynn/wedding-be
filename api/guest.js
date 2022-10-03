@@ -17,6 +17,7 @@ router.get('/', async (req, res, next) => {
     const {rows} = await db.query(query);
     if (rows?.length) {
       res.send(rows[0]);
+      await db.end();
     }
 
     // db.query(query, (err, result) => {
@@ -31,7 +32,7 @@ router.get('/', async (req, res, next) => {
     // });
   } catch (err) {
     console.error(err);
+    await db.end();
     next(err);
   }
-  await db.end();
 });
