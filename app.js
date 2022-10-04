@@ -4,9 +4,12 @@ const port = process.env.PORT || 3001;
 module.exports = app;
 
 app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, API-Key')
-  next()
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, API-Key',
+  );
+  next();
 });
 
 // Enables parsing of POST request body
@@ -20,11 +23,9 @@ app.get('/', (req, res) => {
 // Simple API key auth
 if (process.env.NODE_ENV === 'production') {
   app.use((req, res, next) => {
-    console.log('API KEY: ', process.env.API_KEY);
-    const apiKey = req.get('API-key');
-    console.log('from header: ', apiKey);
+    const apiKey = req.get('API-Key');
     if (!apiKey || apiKey !== process.env.API_KEY) {
-      res.status(401).json({error: 'unauthorised'});
+      res.status(401).json({error: 'Unauthorized'});
     } else {
       next();
     }
