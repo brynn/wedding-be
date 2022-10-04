@@ -17,6 +17,7 @@ app.use('/api', cors(), require('./api'));
 
 // Simple API key auth
 if (process.env.NODE_ENV === 'production') {
+  console.log('auth? ', apiKeyAuth(/^API_KEY/));
   app.use(apiKeyAuth(/^API_KEY/));
 }
 
