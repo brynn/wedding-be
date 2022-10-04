@@ -12,6 +12,7 @@ app.use(express.urlencoded({extended: true}));
 
 // Simple API key auth
 if (process.env.NODE_ENV === 'production') {
+  console.log('API KEY: ', process.env.API_KEY);
   app.use(apiKeyAuth(/^API_KEY/));
 }
 
