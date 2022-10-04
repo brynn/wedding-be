@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3001;
 module.exports = app;
@@ -32,7 +33,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.use('/api', require('./api'));
+app.use('/api', cors(), require('./api'));
 
 app.use((err, req, res, next) => {
   console.error(err);
