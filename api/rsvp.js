@@ -28,8 +28,11 @@ router.post('/', async (req, res, next) => {
     `;
     const rsvp = await db.one(query, [name, email, response, plus_one]);
     if (rsvp) {
-      // If our RSVP insert succeeded, update rsvp_sent in the guest table
-      await db.none(`UPDATE guest SET rsvp_sent = TRUE WHERE email = $1`, [email]);
+      // If our RSVP insert succeeded, update rsvp_sent and response in the guest table
+      await db.none(`UPDATE guest SET rsvp_sent = TRUE, response = $2 WHERE email = $1`, [
+        email,
+        rsvp.response,
+      ]);
       res.send(rsvp);
     }
   } catch (err) {
