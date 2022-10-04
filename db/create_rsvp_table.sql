@@ -9,5 +9,5 @@ CREATE TABLE rsvp (
   meal_choice   MEAL_CHOICE NOT NULL DEFAULT 'fish',
   create_time   TIMESTAMPTZ NOT NULL DEFAULT now(),
   update_time   TIMESTAMPTZ NOT NULL DEFAULT now() CHECK (update_time >= create_time),
-  UNIQUE(name)
+  UNIQUE (email)
 );
