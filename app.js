@@ -14,14 +14,16 @@ app.get('/', (req, res) => {
 
 // Simple API key auth
 if (process.env.NODE_ENV === 'production') {
-  console.log('API KEY: ', process.env.API_KEY);
-  const apiKey = req.get('api_key');
-  console.log('from request: ', apiKey);
-  if (!apiKey || apiKey !== process.env.API_KEY) {
-    res.status(401).json({error: 'unauthorised'});
-  } else {
-    next();
-  }
+  app.use((req, res, next) => {
+    console.log('API KEY: ', process.env.API_KEY);
+    const apiKey = req.get('api_key');
+    console.log('from request: ', apiKey);
+    if (!apiKey || apiKey !== process.env.API_KEY) {
+      res.status(401).json({error: 'unauthorised'});
+    } else {
+      next();
+    }
+  });
 }
 
 app.use('/api', cors(), require('./api'));
