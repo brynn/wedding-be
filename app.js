@@ -1,3 +1,5 @@
+const {apiKeyAuth} = require('@vpriem/express-api-key-auth');
+
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -13,10 +15,14 @@ app.get('/', (req, res) => {
 });
 app.use('/api', cors(), require('./api'));
 
+// Simple API key auth
+if (process.env.NODE_ENV === 'production') {
+  app.use(apiKeyAuth(/^API_KEY/));
+}
+
 app.use((err, req, res, next) => {
   console.error(err);
-  console.error(err.stack);
-  res.status(err.status || 500).send(err.message || 'Internal server error.');
+  res.status(err.status || 500).send(err.message || 'Internal server error');
 });
 
 app.listen(port, () =>
