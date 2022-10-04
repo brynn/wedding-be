@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 // Simple API key auth
 if (process.env.NODE_ENV === 'production') {
   app.use((req, res, next) => {
-    const apiKey = req.headers('API-Key');
+    const apiKey = req.header('API-Key');
     if (!apiKey || apiKey !== process.env.API_KEY) {
       res.status(401).json({error: 'Unauthorized'});
     } else {
