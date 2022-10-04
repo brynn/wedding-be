@@ -10,16 +10,16 @@ module.exports = app;
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+// Simple API key auth
+if (process.env.NODE_ENV === 'production') {
+  app.use(apiKeyAuth(/^API_KEY/));
+}
+
 app.get('/', (req, res) => {
   res.send('You found a server');
 });
 app.use('/api', cors(), require('./api'));
 
-// Simple API key auth
-if (process.env.NODE_ENV === 'production') {
-  console.log('auth? ', apiKeyAuth(/^API_KEY/));
-  app.use(apiKeyAuth(/^API_KEY/));
-}
 
 app.use((err, req, res, next) => {
   console.error(err);
