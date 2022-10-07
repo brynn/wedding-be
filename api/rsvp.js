@@ -18,14 +18,20 @@ router.get('/', async (req, res, next) => {
 // POST /api/rsvp
 router.post('/', async (req, res, next) => {
   try {
-    const {name, email, response, plus_one, rehearsal_dinner} = req.body;
-    // TODO: add meal_choice to form
+    const {name, email, response, plus_one, rehearsal_dinner, meal_choice} = req.body;
     const query = `
-      INSERT INTO rsvp (name, email, response, plus_one, rehearsal_dinner)
+      INSERT INTO rsvp (name, email, response, plus_one, rehearsal_dinner, meal_choice)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *
     `;
-    const rsvp = await db.one(query, [name, email, response, plus_one, rehearsal_dinner]);
+    const rsvp = await db.one(query, [
+      name,
+      email,
+      response,
+      plus_one,
+      rehearsal_dinner,
+      meal_choice,
+    ]);
     if (rsvp) {
       // If our RSVP insert succeeded, update rsvp_sent, response, and name in the guest table
       await db.none(
