@@ -2,7 +2,7 @@ const db = require('../db');
 const router = require('express').Router();
 module.exports = router;
 
-// GET /api/guest
+// GET /api/guest?email={email}
 router.get('/', async (req, res, next) => {
   const email = req.query.email;
   if (!email) {

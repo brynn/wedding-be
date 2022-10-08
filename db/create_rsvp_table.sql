@@ -5,8 +5,8 @@ CREATE TABLE rsvp (
   name                TEXT CHECK (name <> ''),
   email               TEXT REFERENCES guest(email) NOT NULL,
   response            BOOLEAN NOT NULL DEFAULT FALSE,
-  plus_one            BOOLEAN NOT NULL DEFAULT TRUE,
-  rehearsal_dinner    BOOLEAN NOT NULL DEFAULT TRUE,
+  plus_one            BOOLEAN NOT NULL DEFAULT FALSE,
+  rehearsal_dinner    BOOLEAN NOT NULL DEFAULT FALSE,
   meal_choice         MEAL_CHOICE NOT NULL DEFAULT 'fish',
   -- ensure that if they're not bringing a plus one, guest_meal_choice is null
   guest_meal_choice   MEAL_CHOICE CHECK (
