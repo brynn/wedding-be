@@ -26,18 +26,16 @@ router.post('/', async (req, res, next) => {
       req.body;
     const query = `
       INSERT INTO rsvp (
-        name, email, response, plus_one, rehearsal_dinner, meal_choice, guest_meal_choice)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+        name, email, response, rehearsal_dinner, meal_choice)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *
     `;
     const rsvp = await db.one(query, [
       name,
       email,
       response,
-      plus_one,
       rehearsal_dinner,
       meal_choice,
-      guest_meal_choice,
     ]);
     if (rsvp) {
       // If our RSVP insert succeeded, update rsvp_sent, response, and name in the guest table
