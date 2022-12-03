@@ -20,6 +20,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // POST /api/rsvp
+// TODO (brynn): req.body is of type RSVPs {guest, plus_one, new_plus_one}
 router.post('/', async (req, res, next) => {
   try {
     const {name, email, response, plus_one, rehearsal_dinner, meal_choice, guest_meal_choice} =
@@ -30,13 +31,7 @@ router.post('/', async (req, res, next) => {
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *
     `;
-    const rsvp = await db.one(query, [
-      name,
-      email,
-      response,
-      rehearsal_dinner,
-      meal_choice,
-    ]);
+    const rsvp = await db.one(query, [name, email, response, rehearsal_dinner, meal_choice]);
     if (rsvp) {
       // If our RSVP insert succeeded, update rsvp_sent, response, and name in the guest table
       await db.none(
