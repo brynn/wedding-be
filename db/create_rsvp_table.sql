@@ -2,7 +2,7 @@ CREATE TYPE MEAL_CHOICE AS ENUM ('fish', 'meat', 'vegetarian');
 
 CREATE TABLE rsvp (
   id                  BIGSERIAL PRIMARY KEY,
-  guest_id            BIGINT REFERENCES guest(id),
+  guest_id            BIGINT REFERENCES guest(id) UNIQUE,
   name                TEXT NOT NULL,
   email               TEXT,
   response            BOOLEAN NOT NULL DEFAULT FALSE,

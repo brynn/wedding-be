@@ -3,6 +3,8 @@ const router = require('express').Router();
 module.exports = router;
 
 // GET /api/guest?email={email}
+// Returns the guest along with their existing RSVP if it exists,
+// as well as their plus one if one exists
 router.get('/', async (req, res, next) => {
   const email = req.query.email;
   if (!email) {
@@ -10,18 +12,21 @@ router.get('/', async (req, res, next) => {
   }
   try {
     const guest = await db.one(`SELECT * FROM guest WHERE email = $1`, [email]);
-    console.log('guest from DB: ', guest);
     if (guest) {
-      const rsvp = await db.one(`SELECT * FROM rsvp where guest_id = $1`, [guest.id]);
-      guest.rsvp = rsvp;
-      console.log('guest rsvp from DB: ', rsvp);
-      const plus_one = await db.one(`
+      guest.rsvp = await db.oneOrNone(`SELECT * FROM rsvp where guest_id = $1`, [guest.id]);
+      guest.plus_one = await db.oneOrNone(
+        `
         SELECT *
         FROM guest g
-        JOIN plus_ones p ON (g.id = p.guest_id)
-        WHERE id = p.id`);
-      guest.plus_one = plus_one;
-      console.log('guest plus one from DB: ', plus_one);
+        JOIN plus_ones p ON (g.id = p.plus_one_id)
+        WHERE p.guest_id = $1`,
+        [guest.id],
+      );
+      if (guest.plus_one) {
+        guest.plus_one.rsvp = await db.oneOrNone(`SELECT * FROM rsvp where guest_id = $1`, [
+          guest.plus_one.id,
+        ]);
+      }
       res.send(guest);
     }
   } catch (err) {
