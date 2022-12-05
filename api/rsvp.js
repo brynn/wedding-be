@@ -81,6 +81,18 @@ router.post('/', async (req, res, next) => {
         email,
         plus_one_id,
       ]);
+    } else if (!guest_rsvp.response) {
+      // If the guest declines, make sure their plus one also declines
+      await db.none(
+        `
+        UPDATE rsvp 
+        SET response = FALSE 
+        WHERE guest_id = (
+          SELECT plus_one_id 
+          FROM plus_ones
+          WHERE guest_id = $1)`,
+        [guest_id],
+      );
     }
 
     res.send({

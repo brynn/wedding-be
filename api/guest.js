@@ -11,7 +11,7 @@ router.get('/', async (req, res, next) => {
     res.status(403).send('Email is required');
   }
   try {
-    const guest = await db.one(`SELECT * FROM guest WHERE email = $1`, [email]);
+    const guest = await db.oneOrNone(`SELECT * FROM guest WHERE email = $1`, [email]);
     if (guest) {
       guest.rsvp = await db.oneOrNone(`SELECT * FROM rsvp where guest_id = $1`, [guest.id]);
       guest.plus_one = await db.oneOrNone(
@@ -28,6 +28,8 @@ router.get('/', async (req, res, next) => {
         ]);
       }
       res.send(guest);
+    } else {
+      res.status(404).send('Guest not found');
     }
   } catch (err) {
     console.error(err);
