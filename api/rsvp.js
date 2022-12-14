@@ -24,7 +24,8 @@ router.post('/', async (req, res, next) => {
     plus_one_rsvp = null;
   }
   if (plus_one_rsvp && !plus_one_rsvp.name) {
-    res.status(403).send('Name is required');
+    console.log('name is required');
+    return res.status(403).send('Name is required');
   }
 
   const {guest_id, name, email, response, meal_choice, rehearsal_dinner} = guest_rsvp;
@@ -95,7 +96,7 @@ router.post('/', async (req, res, next) => {
       );
     }
 
-    res.send({
+    return res.send({
       guest_rsvp: new_guest_rsvp,
       plus_one_rsvp: new_plus_one_rsvp,
     });

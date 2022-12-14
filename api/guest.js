@@ -8,7 +8,7 @@ module.exports = router;
 router.get('/', async (req, res, next) => {
   const email = req.query.email;
   if (!email) {
-    res.status(403).send('Email is required');
+    return res.status(403).send('Email is required');
   }
   try {
     const guest = await db.oneOrNone(`SELECT * FROM guest WHERE email = $1`, [email]);
@@ -27,9 +27,9 @@ router.get('/', async (req, res, next) => {
           guest.plus_one.id,
         ]);
       }
-      res.send(guest);
+      return res.send(guest);
     } else {
-      res.status(404).send('Guest not found');
+      return res.status(404).send('Guest not found');
     }
   } catch (err) {
     console.error(err);
