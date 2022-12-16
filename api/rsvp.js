@@ -25,7 +25,6 @@ router.post('/', async (req, res, next) => {
   }
 
   const {guest_id, name, email, response, meal_choice, rehearsal_dinner} = guest_rsvp;
-
   let new_guest_rsvp,
     new_plus_one_rsvp = null;
 
@@ -41,7 +40,7 @@ router.post('/', async (req, res, next) => {
     await db.none(`UPDATE guest SET name = $1, email = $2 WHERE id = $3`, [name, email, guest_id]);
 
     let new_plus_one = null;
-    if (!plus_one_rsvp.guest_id && plus_one_rsvp.response) {
+    if (!plus_one_rsvp?.guest_id && plus_one_rsvp?.response) {
       const {name, email, response, meal_choice, rehearsal_dinner} = plus_one_rsvp;
       // We need to add a the new plus one to the guest and plus_ones tables first
       new_plus_one = await db.one(
@@ -74,7 +73,7 @@ router.post('/', async (req, res, next) => {
     } else if (!guest_rsvp.response && plus_one_rsvp?.guest_id) {
       // If the guest declines, make sure their plus one also declines
       const {guest_id, name, email, meal_choice, rehearsal_dinner} = plus_one_rsvp;
-      plus_one_rsvp = await db.one(insertRSVPQuery, [
+      new_plus_one_rsvp = await db.one(insertRSVPQuery, [
         guest_id,
         name,
         email,
