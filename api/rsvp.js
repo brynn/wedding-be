@@ -81,18 +81,17 @@ router.post('/', async (req, res, next) => {
         email,
         plus_one_id,
       ]);
-    } else if (!guest_rsvp.response) {
+    } else if (!guest_rsvp.response && plus_one_rsvp?.guest_id) {
       // If the guest declines, make sure their plus one also declines
-      await db.none(
-        `
-        UPDATE rsvp 
-        SET response = FALSE 
-        WHERE guest_id = (
-          SELECT plus_one_id 
-          FROM plus_ones
-          WHERE guest_id = $1)`,
-        [guest_id],
-      );
+      const {guest_id, name, email, meal_choice, rehearsal_dinner} = plus_one_rsvp;
+      plus_one_rsvp = await db.one(insertRSVPQuery, [
+        guest_id,
+        name,
+        email,
+        'false',
+        meal_choice,
+        rehearsal_dinner,
+      ]);
     }
 
     return res.send({
