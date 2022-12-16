@@ -11,7 +11,8 @@ const insertRSVPQuery = `
       email = $3,
       response = $4,
       meal_choice = $5,
-      rehearsal_dinner = $6
+      rehearsal_dinner = $6,
+      update_time = now()
     RETURNING *
 `;
 
