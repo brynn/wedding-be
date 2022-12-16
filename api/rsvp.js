@@ -20,10 +20,10 @@ const insertRSVPQuery = `
 // Returns the updated RSVPs
 router.post('/', async (req, res, next) => {
   let {guest_rsvp, plus_one_rsvp} = req.body;
-  if (!guest_rsvp.response) {
-    plus_one_rsvp = null;
-  }
-  if (plus_one_rsvp && !plus_one_rsvp.name) {
+  // if (!guest_rsvp.response) {
+  //   plus_one_rsvp = null;
+  // }
+  if (plus_one_rsvp.response && !plus_one_rsvp.name) {
     return res.status(403).send('name is required');
   }
 
@@ -44,7 +44,7 @@ router.post('/', async (req, res, next) => {
     await db.none(`UPDATE guest SET name = $1, email = $2 WHERE id = $3`, [name, email, guest_id]);
 
     let new_plus_one = null;
-    if (plus_one_rsvp) {
+    if (plus_one_rsvp.response) {
       const {guest_id, name, email, response, meal_choice, rehearsal_dinner} = plus_one_rsvp;
       if (!guest_id) {
         // We need to add a the new plus one to the guest and plus_ones tables first
