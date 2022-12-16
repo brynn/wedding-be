@@ -20,10 +20,7 @@ const insertRSVPQuery = `
 // Returns the updated RSVPs
 router.post('/', async (req, res, next) => {
   let {guest_rsvp, plus_one_rsvp} = req.body;
-  // if (!guest_rsvp.response) {
-  //   plus_one_rsvp = null;
-  // }
-  if (plus_one_rsvp.response && !plus_one_rsvp.name) {
+  if (plus_one_rsvp?.response && !plus_one_rsvp.name) {
     return res.status(403).send('name is required');
   }
 
@@ -76,7 +73,6 @@ router.post('/', async (req, res, next) => {
       ]);
     } else if (!guest_rsvp.response && plus_one_rsvp?.guest_id) {
       // If the guest declines, make sure their plus one also declines
-      console.log('adding plus one rsvp decline');
       const {guest_id, name, email, meal_choice, rehearsal_dinner} = plus_one_rsvp;
       plus_one_rsvp = await db.one(insertRSVPQuery, [
         guest_id,
