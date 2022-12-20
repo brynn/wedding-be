@@ -39,6 +39,7 @@ router.post('/', async (req, res, next) => {
       rehearsal_dinner,
     ]);
     await db.none(`UPDATE guest SET name = $1, email = $2 WHERE id = $3`, [name, email, guest_id]);
+    console.log(`Added RSVP: ${name}`);
 
     let new_plus_one = null;
     if (!plus_one_rsvp?.guest_id && plus_one_rsvp?.response) {
@@ -51,6 +52,7 @@ router.post('/', async (req, res, next) => {
         `,
         [plus_one_rsvp.name, plus_one_rsvp.email, false],
       );
+      console.log(`Added new plus one guest: ${plus_one_rsvp.name}`);
       await db.none(
         `
         INSERT INTO plus_ones (guest_id, plus_one_id)
@@ -75,6 +77,7 @@ router.post('/', async (req, res, next) => {
         email,
         plus_one_id,
       ]);
+      console.log(`Added plus one RSVP: ${plus_one_rsvp.name}`);
     }
 
     return res.send({
