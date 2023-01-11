@@ -68,7 +68,7 @@ router.post('/', async (req, res, next) => {
         plus_one_id,
         name,
         email,
-        guest_rsvp.response === 'false' ? 'false' : response, // if guest declines, make sure plus one declines
+        !guest_rsvp.response ? 'false' : response, // if guest declines, make sure plus one declines
         meal_choice,
         rehearsal_dinner,
       ]);
